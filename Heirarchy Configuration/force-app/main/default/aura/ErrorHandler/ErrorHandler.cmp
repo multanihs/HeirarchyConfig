@@ -1,0 +1,17 @@
+<aura:component >
+	<aura:attribute type="String" name="message" />
+	<div   class="slds-notify_container">
+		<div aura:id="errorId" class="slds-notify slds-notify--toast slds-theme--error" role="alert">
+			<span class="slds-assistive-text">Error</span>
+				
+			<div class="slds-notify__content slds-grid">
+				<lightning:icon iconName="utility:warning" size="small" alternativeText="Indicates Warning"/>
+				<div class="slds-col slds-align-middle">
+					<h2 class="slds-text-heading--small">&nbsp;&nbsp;{!v.message}</h2>
+				</div>
+                <lightning:buttonIcon onclick="{!c.handleClick}"  variant="container" iconName="utility:close" size="small"  alternativeText="Indicates Close"/>
+				<span class="slds-assistive-text">Close</span>
+			</div>
+		</div>
+	</div>
+</aura:component>

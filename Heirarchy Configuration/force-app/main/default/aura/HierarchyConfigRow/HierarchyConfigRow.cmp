@@ -1,0 +1,40 @@
+<aura:component access="global">
+    <aura:attribute type="HierarchyConfig__c" name="config"/>
+    <aura:attribute type="string" name="level"/>
+    
+    <aura:registerEvent name="showRelatedConfig" type="c:ShowRelatedConfig"/>
+    <aura:registerEvent name="toggleModal" type="c:ToggleModal"/>
+    <aura:registerEvent name="deleteConfig" type="c:DeleteConfig"/>
+   	
+    <!--aura:handler event="c:UpdateChangeConfig" action="{!c.setConfig}"/-->
+    
+    <tr class="slds-hint-parent" id="tree0-node0" role="row"  aria-level="{!v.level}" >
+        
+        <!--<th scope="row"> 
+            	<div aura:id="relatedRecords" class="slds-truncate" title="{!v.config.Object__c}"><a onclick="{!c.handleClick}">{!v.config.Object__c}</a></div>
+        </th> -->
+        <td>
+        		<div class="slds-truncate" title="{!v.config.RelatedObject__c}" onclick="{!c.handleClick}">{!v.config.Label__c}</div>
+        </td>
+        <td>	
+            	<div class="slds-truncate" title="{!v.config.RelatedObject__c}" onclick="{!c.handleClick}" >{!v.config.RelatedObject__c}</div>
+        </td>		
+        <td>
+            	<div class="slds-truncate" title="{!v.config.fields__c}" onclick="{!c.handleClick}">{!v.config.fields__c}</div>
+        </td>
+        <td>	
+            	<div class="slds-truncate" title="{!v.config.fieldTitleList__c }" onclick="{!c.handleClick}">{!v.config.fieldTitleList__c}</div>
+        </td>
+        <td>	
+            	<div class="slds-truncate" title="{!v.config.fieldTypes__c}" onclick="{!c.handleClick}">{!v.config.fieldTypes__c}</div>
+        </td>
+        <td>	
+            	<div class="slds-truncate" title="{!v.config.Icon__c }">{!v.config.Icon__c}</div>
+        </td>
+        <th scope="row" > 
+			<lightning:buttonIcon onclick="{!c.handleEdit}" value="{!v.config}" iconName="utility:edit" variant="bare" alternativeText="Edit" iconClass="dark"/>
+             &nbsp;
+			<lightning:buttonIcon onclick="{!c.handleDelete}" value="{!v.config}" iconName="utility:delete" variant="bare" alternativeText="Detete" iconClass="dark"/>  
+        </th>
+    </tr>
+</aura:component>

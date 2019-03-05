@@ -1,0 +1,87 @@
+<aura:component controller="HierarchyConfigListController">    	
+    <aura:attribute type="HierarchyConfig__c" name="configRec" default="{'sobjectType': 'HierarchyConfig__c' , 'haveSetSupport__c' : true }"/>
+    <aura:attribute type="HierarchyConfig__c" name="parentConfig" />
+    <aura:attribute type="Boolean" name="isRelated" default="false"/>    
+    <aura:registerEvent name="refreshEvent" type="c:RefreshEvent"/>    
+    <aura:registerEvent name="toggleModal" type="c:ToggleModal"/>
+    
+    
+    <div class="slds-form--stacked ">
+        <div class="" aura:id="errorBlock" style="position:absolute !important">
+        	{!v.body}
+    	</div>
+        <aura:if isTrue="{!v.isRelated}">
+            <fieldset class="slds-form-element">
+                <div class="slds-form-element">
+                    <ui:inputText aura:id="Object" label="Object"
+                                    class="slds-input"
+                                    labelClass="slds-form-element__label"
+                                    value="{!v.configRec.Object__c}" required="true"/>                       
+                    <ui:inputText aura:id="RelatedObject" label="Related Object"
+                                    class="slds-input"
+                                    labelClass="slds-form-element__label"
+                                    value="{!v.configRec.RelatedObject__c}" required="true"/>
+                </div>
+                <div class="slds-form-element">
+                    <ui:inputText aura:id="DisplayFieldName" label="Display Field Name"
+                                    class="slds-input"
+                                    labelClass="slds-form-element__label"
+                                    value="{!v.configRec.DisplayField__c}" required="true"/>
+                    <ui:inputText aura:id="Label" label="Label"
+                                    class="slds-input"
+                                    labelClass="slds-form-element__label"
+                                    value="{!v.configRec.Label__c}" required="true"/>
+                </div>
+                <div class="slds-form-element">
+                    <ui:inputText aura:id="Fields" label="Fields"
+                                    class="slds-input"
+                                    labelClass="slds-form-element__label"
+                                    value="{!v.configRec.fields__c}" required="true"/>
+                    <ui:inputText aura:id="fieldTitleList" label="Field Title List"
+                                    class="slds-input"
+                                    labelClass="slds-form-element__label"
+                                    value="{!v.configRec.fieldTitleList__c}" required="true"/>
+                </div>
+                <div class="slds-form-element">
+                    <ui:inputText aura:id="filterCondition" label="Filter Condition"
+                                    class="slds-input"
+                                    labelClass="slds-form-element__label"
+                                    value="{!v.configRec.filterCondition__c}"/>
+                    <ui:inputText aura:id="Icon" label="Icon"
+                                    class="slds-input"
+                                    labelClass="slds-form-element__label"
+                                    value="{!v.configRec.Icon__c}" required="false"/>
+                    <ui:inputCheckBox aura:id="" label="Query Locator supported"
+                                    labelClass="slds-form-element__label"                                    
+                                    value="{!v.configRec.haveSetSupport__c }" required="false"/>                    
+                </div>
+            </fieldset>
+            <aura:set attribute="else">
+				<fieldset class="slds-form-element">
+                	<div class="slds-form-element">
+                    	<ui:inputText aura:id="Object" label="Object"
+                                    class="slds-checkbox"
+                                    labelClass="slds-form-element__label"
+                                    value="{!v.configRec.Object__c}" required="true"/>                       
+                	</div>
+                	<div class="slds-form-element">
+                    	<ui:inputText aura:id="DisplayFieldName" label="Display Field Name"
+                                    class="slds-input"
+                                    labelClass="slds-form-element__label"
+                                    value="{!v.configRec.DisplayField__c}" required="true"/>
+                	</div>
+                	<div class="slds-form-element">
+                    	<ui:inputText aura:id="RecordType" label="RecordType"
+                                    class="slds-input"
+                                    labelClass="slds-form-element__label"
+                                    value="{!v.configRec.RecordType__c}" required="false"/>
+                	</div>
+                </fieldset>
+            </aura:set>
+        </aura:if>        
+        <div class="slds-docked-form-footer">
+            <button type="button" class="slds-button slds-button--neutral" onclick="{!c.cancel}">Cancel</button>
+            <button type="submit" class="slds-button slds-button--brand" onclick="{!c.save}">Save</button>
+        </div>
+	</div>        
+</aura:component>

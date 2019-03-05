@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Event template" >
+    <aura:attribute type="string" name="configId"/>
+    <aura:attribute type="Object" name="config"/>
+</aura:event>

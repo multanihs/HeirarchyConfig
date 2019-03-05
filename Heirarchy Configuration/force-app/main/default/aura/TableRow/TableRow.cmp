@@ -1,0 +1,30 @@
+<aura:component >
+	<aura:attribute name="config" type="SObject" />
+	<aura:attribute name="record" type="SObject" />
+	<aura:attribute name="colValueArray" type="String[]" />
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	
+		
+	<tr class="slds-hint-parent">
+		<aura:iteration items="{!v.colValueArray}" var="col" indexVar="index">
+			<td>
+				<aura:if isTrue="{!col.type == 'Text'}">
+					<div class="slds-truncate" title="{!col.value}">{!col.value}</div>										
+					<aura:set attribute="else">
+						<aura:if isTrue="{!col.type == 'CURRENCY'}">
+							<ui:outputCurrency value="{!col.value}"/>
+							<aura:set attribute="else">
+                                <aura:if isTrue="{!col.type == 'Checkbox'}">
+                                    <input type="checkbox"  disabled="true" value ="{!col.value}"></input>	
+                                    <aura:set attribute="else">
+                                        <div class="slds-truncate" title="{!col.value}">{!col.value}</div>	
+                                    </aura:set>
+                                </aura:if>
+							</aura:set>	
+						</aura:if>		
+					</aura:set>
+				</aura:if>
+			</td>
+		</aura:iteration>	
+	</tr>	
+</aura:component>

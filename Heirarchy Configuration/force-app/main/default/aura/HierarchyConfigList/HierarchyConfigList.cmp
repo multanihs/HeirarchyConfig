@@ -1,0 +1,180 @@
+<aura:component controller="HierarchyConfigListController">
+    <aura:attribute name="configs" type="List" />
+    <aura:attribute name="selectedConfigs" type="List" default="[]"/>
+    <aura:attribute name="relatedConfigs" type="List" default="[]"/>
+    <aura:attribute name="selectedObjConfig" type="SObject"/>
+    
+    <aura:attribute name="isOpen" type="boolean" default="false" />
+    <aura:attribute name="showRelated" type="boolean" default="false" />
+            
+  	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="toggleModal" event="c:ToggleModal" action="{!c.openModal}"/>
+    <aura:handler name="refreshEvent" event="c:RefreshEvent" action="{!c.refreshEvent}"/>    
+    <aura:handler name="deleteConfig" event="c:DeleteConfig" action="{!c.handleDeleteEvent}"/>    
+	<aura:handler name="showRelatedConfig" event="c:ShowRelatedConfig" action="{!c.getRelatedConfig}"/>
+    
+    <div aura:id="loading" class="hide">
+        <div id="loading-content">
+            Loading...
+        </div>
+    </div>    
+    <div class="slds">
+		<div style="float:left;width:30%;height:100vh;border-style:solid;border-width:1px;overflow-y:scroll;" >
+		    <article class="slds-card" style="margin:5px 5px 5px 5px;">
+		        <div class="slds-card__header slds-grid">
+		            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+		                <div class="slds-media__figure">
+		                    <lightning:icon iconName="action:settings" size="medium" alternativeText="Hierarchy Configuration List"/>
+		                </div>
+		                <div class="slds-media__body">
+		                    <h2>
+		                        <a href="javascript:void(0);" class="slds-card__header-link slds-truncate">
+		                            <span class="slds-text-heading--small">Hierarchy Configuration</span>
+		                        </a>
+		                    </h2>
+		                </div>
+		            </header>
+		            <div class="slds-no-flex">
+		      			<button class="slds-button slds-button_neutral" onclick="{!c.newRecord}">New</button>
+		    		</div>
+		        </div>
+				<div id="treeSection"  aura:id="HierarchyDiv">
+					<div class="slds-card__body">
+						<table class="slds-table slds-table--bordered slds-no-row-hover slds-table--cell-buffer slds-table_fixed-layout">
+				          <thead>
+				            <tr class="slds-text-title--caps">
+				              <th scope="col">
+								<div class="slds-truncate" title="Select">Select</div>
+							  </th>
+				              <th scope="col">
+				                <div class="slds-truncate" title="Object">Object</div>
+				              </th>
+				              <th scope="col">
+				                <div class="slds-truncate" title="Object">Record Type</div>
+				              </th>
+				              <th scope="col">
+				                <div class="slds-truncate" title="Action">
+				                    Action
+				                </div>
+				              </th>  
+				            </tr>
+				          </thead>
+				          <tbody>
+				            <aura:iteration items="{!v.configs}" var="config">
+				                <tr class="slds-hint-parent" id="tree0-node1" role="row" aria-level="1" aria-owns="tree0-node1-0" aria-expanded="true">
+				                  <td scope="row" class="slds-tree__item"> 
+									<aura:if isTrue="{!v.selectedObjConfig.Id == config.Id}">
+										<ui:inputradio name="selectGroup" text="{!config}" change="{!c.handleRelatedRecords}" value="true"/>
+                                        <aura:set attribute="else">
+                                        	<ui:inputradio name="selectGroup" text="{!config}" change="{!c.handleRelatedRecords}" value="false"/>
+                                        </aura:set> 
+				       			 	</aura:if>
+                                  </td>				                 
+				                  <td scope="row">
+				                    <div class="slds-truncate" title="{!config.Object__c}"><a href="javascript:void(0);">{!config.Object__c}</a></div>
+				                  </td>
+				                  <td scope="row">
+				                    <div class="slds-truncate" title="{!config.RecordType__c}"><a href="javascript:void(0);">{!config.RecordType__c}</a></div>
+				                  </td>                  
+				                  <td class="row">
+				                  	<lightning:buttonIcon onclick="{!c.handleClick}" 
+				                                         value="{!config}" iconName="utility:edit" variant="bare" alternativeText="Settings" iconClass="dark"/>  
+				                      &nbsp;
+				                      <lightning:buttonIcon onclick="{!c.handleDeleteEvent}" 
+				                                         value="{!config}" iconName="utility:delete" variant="bare" alternativeText="Settings" iconClass="dark"/>  
+				                  </td>
+				                </tr>
+				            </aura:iteration>
+			          		</tbody>
+			        	</table>
+					</div>      
+				</div>              
+			</article>
+		</div>
+	</div>
+    <aura:if isTrue="{!v.isOpen}">
+	    <div role="editDialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-modal--large slds-fade-in-open" >
+	        <div class="slds-modal__container">
+	            <div class="slds-modal__header">
+	              <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModal}">
+	            X
+	                <span class="slds-assistive-text">Close</span>
+	              </button>
+	      		<h2 id="header43" class="slds-text-heading--medium">Edit Record</h2>
+	    		</div>
+	            <div aura:id="editDetail" class="slds-modal__content slds-p-around--medium">  
+	            </div>
+	        </div>
+	    </div>	
+		<div aura:id="overlay" class="slds-backdrop"></div>
+    </aura:if>
+	<aura:if isTrue="{!v.selectedConfigs.length > 0 }">
+		<div aura:id="relatedRecordsId" style="float:left;width:70%;height:100vh;border-style:solid;border-width:1px;overflow-y:scroll;"  >
+			<article class="slds-card" style="margin:5px 5px 5px 5px;">
+				<div class="slds-card__header slds-grid">
+					<header class="slds-media slds-media--center slds-has-flexi-truncate">
+						<div class="slds-media__figure">
+							<lightning:icon iconName="action:settings" size="medium" alternativeText="Hierarchy Configuration List"/>
+						</div>
+						<div class="slds-media__body">
+							<h2>
+								<a href="javascript:void(0);" class="slds-card__header-link slds-truncate">
+									<span class="slds-text-heading--small"> Related Configurations</span>
+								</a>
+							</h2>                            
+							<aura:iteration items="{!v.selectedConfigs}" var="config" indexVar="index">
+								<a href="javascript:void(0);" class="slds-card__header-link slds-truncate" onclick="{!c.changeConfig}" data-index="{!indexVar}">
+									<span class="slds-text-heading--small" data-index="{!index}"> {!config.Object__c} </span>
+                                        <aura:if isTrue="{!config.Label__c != null}"><span>( {!config.Label__c})</span> </aura:if>
+								</a>
+                                &nbsp;>>&nbsp; 
+							</aura:iteration>	                        
+                        </div>
+					</header>
+		            <div class="slds-no-flex">
+		      			<button class="slds-button slds-button_neutral" onclick="{!c.newRelatedRecord}">New Related Record</button>
+		    		</div>
+				</div>				
+  				<div class="slds-card__body">
+                    <aura:if isTrue="{!v.relatedConfigs.length > 0 }">
+                        <div id="relatedSection"  aura:id="HierarchyConfigDiv">	  		 
+                            <table class="slds-table slds-table--bordered slds-tree slds-table--tree" 
+                                   style="table-layout:fixed" role="treegrid" aria-readonly="true" aria-owns="tree0-node0 tree0-node1 	tree0-node2 tree0-node3" aura:id="hierarchyConfigGrid">
+                                <thead>
+                                    <tr class="slds-text-title--caps">
+                                      <th scope="col">
+                                            <div class="slds-truncate" title="Related Object">Label</div>                 
+                                      </th>								  
+                                      <th scope="col">
+                                            <div class="slds-truncate" title="Related Object">Related Object</div>                 
+                                      </th>
+                                      <th scope="col">
+                                            <div class="slds-truncate" title="Fields">Fields</div>
+                                      </th>
+                                      <th scope="col">
+                                            <div class="slds-truncate" title="Field Title List">Field Title List</div>                 
+                                      </th>
+                                      <th scope="col">
+                                            <div class="slds-truncate" title="Field Type">Field Type</div>                 
+                                      </th>
+                                      <th scope="col">
+                                            <div class="slds-truncate" title="Icon">Icon</div>                 
+                                      </th>										
+                                      <th scope="col">
+                                        <div class="slds-truncate" title="Action">Action</div>
+                                      </th>
+                                    </tr>
+                                </thead>			
+                                <tbody> 
+                                    <aura:iteration items="{!v.relatedConfigs}" var="config">
+                                        <c:HierarchyConfigRow level="1" config="{!config}" />		
+                                    </aura:iteration>								     		
+                                </tbody>
+                            </table>
+                        </div>
+                    </aura:if>
+				</div>				
+			</article>	
+		</div>
+	</aura:if>
+</aura:component>

@@ -1,0 +1,51 @@
+<aura:component controller="HierarchyController">	
+	<aura:attribute name="config" type="SObject"/>
+	<aura:attribute name="titleArray" type="String[]"/>
+	<aura:attribute name="sobjectList" type="SObject[]" />
+	<aura:attribute name="serverRecCount" type="Integer" default="0"/>
+	<aura:attribute name="parentSObject" type="SObject"/>
+	
+
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	
+	<article class="slds-card">
+		<div class="slds-card__header slds-grid">
+			<header class="slds-media slds-media--center slds-has-flexi-truncate">
+     			<div class="slds-media__figure">
+        			<span class="slds-icon_container slds-icon-standard-contact" title="description of icon when needed">
+          				<lightning:icon iconName="{!v.config.Icon__c}" size="small" variant="error"/>          				
+        			</span>
+      			</div>
+      			<div class="slds-media__body">
+        			<h2>
+          				<a href="javascript:void(0);" class="slds-card__header-link slds-truncate">
+            				<span class="slds-text-heading--small">{!v.config.Label__c} ({!v.sobjectList.length})</span>
+          				</a>
+        			</h2>
+      			</div>
+    		</header>
+    	</div>
+    	<div class="slds-card__body">
+    		<table aura:id="recordTable" class="slds-table slds-table--bordered slds-no-row-hover slds-table--cell-buffer  slds-table_fixed-layout">
+    			<thead>
+    				<tr class="slds-text-title--caps">
+						<aura:iteration items="{!v.titleArray}" var="title" indexVar="index">
+							<th scope="col">
+								<div class="slds-truncate" title="{!title}">{!title}</div>
+							</th>
+						</aura:iteration>	    				
+					</tr>
+    			</thead>
+    			<tbody>
+    			</tbody>    			
+    		</table>
+    	</div>
+		<aura:renderIf isTrue="{!v.sobjectList.length &lt; v.serverRecCount }">
+			<div aura:id="CardFooter" class="slds-card__footer">
+				<a onclick="{!c.showMoreData}" href="javascript:void(0);">
+					Show More >> <span class="slds-assistive-text">{!v.config.RelatedObject__c}</span>
+				</a>
+			</div>
+		</aura:renderIf>        		
+	</article>	 	   					
+</aura:component>

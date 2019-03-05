@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="Event template" >
+    <aura:attribute name="configId" type="string"></aura:attribute>
+    <aura:attribute name="configRowGlobalId" type="string"></aura:attribute>
+    <aura:attribute name="config" type="object"></aura:attribute>
+</aura:event>

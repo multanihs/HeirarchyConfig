@@ -1,0 +1,39 @@
+<aura:component >
+	<aura:attribute name="level" type="Integer" default="1"/>
+	<aura:attribute name="label" type="String" default=""/>	
+	<aura:attribute name="node" type="Object" default="{}"/>
+    <aura:attribute name="nodeLevel" type="String" default=""/>
+	<aura:attribute name="expanded" type="Boolean" default="false"/>
+	<aura:attribute name="role" type="String" default="row"/>	
+	<aura:attribute name="icon" type="String" default="utility:chevronright"/>
+	<aura:attribute name="hasMoreChildren" type="Boolean" default="false"/>
+    <aura:attribute name="nodeType" type="String" default=""/>
+	<aura:attribute name="isRecordPresent" type="Boolean" default="true" description="Specifies whether any record is present for the current Hierarchy Node." />
+    
+	<aura:registerEvent name="expandEvent" type="c:ExpandNode"/>
+	<aura:registerEvent name="collapseEvent" type="c:CollapseNode"/>
+	<aura:registerEvent name="showEvent" type="c:ShowNode"/>
+    <aura:registerEvent name="showMoreEvent" type="c:ShowMoreEvent"/>
+    
+
+	<tr class="slds-hint-parent" id="tree0-node0" role="{!v.role}"  aria-level="{!v.level}" 
+			 aria-expanded="{!v.expanded}" >
+		<th data-label="Account Name" scope="row"  class="slds-tree__item">
+			<button class="slds-button slds-button--icon slds-m-right--x-small" 
+						title="Toggle" type="button" onclick="{!c.showAction}">
+				<!-- Icon Color: Green - If records are present or current node is the topmost node; 
+					 Icon Color: Red - No records found -->
+				<lightning:icon iconName="{!v.icon}" size="small" class="{! (v.isRecordPresent || v.level == 1) ? 'iconBrand' : 'iconError'}" />	          				          			
+			</button>				
+			<div class="slds-truncate" title="{!v.label}"><a onclick="{!c.showComponent}">{!v.label}</a> &nbsp;&nbsp; 
+                <aura:if isTrue="{!v.nodeType=='data' }">
+                    <a onclick="{!c.goToRecord}">View Record</a>
+                </aura:if>
+            </div>
+            &nbsp;&nbsp;
+            <aura:renderIf isTrue="{!v.hasMoreChildren}">
+            	<div class="slds-truncate" title="more" ><a onclick="{!c.showMoreChildren}">More</a></div>
+            </aura:renderIf>
+		</th>
+	</tr>
+</aura:component>

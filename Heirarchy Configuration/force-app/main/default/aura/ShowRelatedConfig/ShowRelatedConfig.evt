@@ -1,0 +1,5 @@
+<aura:event type="Component" description="Event template" >
+    <aura:attribute name="config" type="HierarchyConfig__c"/>
+    <aura:attribute name="level" type="String"/>
+    <aura:attribute name="index" type="String"/>
+</aura:event>

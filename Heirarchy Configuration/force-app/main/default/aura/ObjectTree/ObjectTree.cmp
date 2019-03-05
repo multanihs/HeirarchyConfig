@@ -1,0 +1,46 @@
+<aura:component controller="HierarchyController" implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:hasSObjectName">
+	<aura:attribute name="recordId" type="String" />
+	<aura:attribute name="sObjectName" type="String" />			
+    <aura:attribute name="rootNode" type="Object" default="{}"/>
+    <aura:attribute name="eventQueue" type="String[]" default="[]"/>
+ 
+    <aura:registerEvent name="expandEvent" type="c:ExpandNode"/>
+    
+    <aura:handler name="expandEvent" event="c:ExpandNode" action="{!c.expandHandler}"/>
+	<aura:handler name="collapseEvent" event="c:CollapseNode" action="{!c.collapseHandler}"/>
+	<aura:handler name="init" value="{!this}" action="{!c.getDetail}"/>
+	<aura:handler name="showEvent" event="c:ShowNode" action="{!c.showComponent}"/>
+    <aura:handler name="showMoreEvent" event="c:ShowMoreEvent" action="{!c.showMoreChildren}"/>
+    <aura:handler event="force:navigateToSObject" action="{!c.navigateSobject}"/>    
+    <div class="" aura:id="errorBlock">
+        {!v.body}
+    </div>
+    <div id="treeSection" style="border-style:solid;border-width:1px;float:left;width:30%;height:900px;overflow-y:scroll;" aura:id="HierarchyDiv">
+         
+        <table class="slds-table slds-table--bordered slds-tree slds-table--tree" role="treegrid" aria-readonly="true" aria-owns="tree0-node0 tree0-node1 tree0-node2 tree0-node3" aura:id="hierarchyGrid">
+            <thead>
+                <tr class="slds-text-title--caps" aria-expanded="false">
+                    <th class="slds-cell-buffer--left" scope="col">
+                        <div class="slds-grid slds-grid--vertical-align-center">
+                            <button class="slds-button slds-button--icon-border-filled slds-buttonl--icon-x-small slds-m-right--x-small slds-shrink-none" 
+                                    	title="Expand All" onclick="{!c.showAll}">
+                                <lightning:icon iconName="utility:expand_all" size="small" variant="error"/>							
+                                <span class="slds-assistive-text">Expand All</span>
+                            </button>
+                            <div class="slds-truncate" title="Name">Name</div>
+                        </div>
+                    </th>
+                </tr>
+            </thead>				
+            <tbody>      		
+            </tbody>
+        </table>
+    </div>
+    <div id="detailSection" aura:id="detailDiv" style="float:left;width:70%;padding:15px;">                              
+    </div>
+    <div aura:id="loading" class="hide">
+		<div id="loading-content">
+            Loading...
+        </div>
+    </div>
+</aura:component>
